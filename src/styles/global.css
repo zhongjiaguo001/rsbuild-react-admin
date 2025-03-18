@@ -1,4 +1,6 @@
 @import 'tailwindcss';
+@custom-variant dark (&:where([data-theme="dark"], [data-theme="dark"] *));
+@custom-variant light (&:where([data-theme="light"], [data-theme="light"] *));
 
 body {
     color: var(--semi-color-text-0);

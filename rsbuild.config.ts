@@ -1,6 +1,7 @@
 import { defineConfig } from "@rsbuild/core";
 import { pluginReact } from "@rsbuild/plugin-react";
 import { TanStackRouterRspack } from "@tanstack/router-plugin/rspack";
+import { pluginSass } from "@rsbuild/plugin-sass";
 // import { SemiRspackPlugin } from "@douyinfe/semi-rspack-plugin";
 
 // 使用 ES 模块写法配置 Semi 插件
@@ -9,7 +10,7 @@ import { TanStackRouterRspack } from "@tanstack/router-plugin/rspack";
 // });
 
 export default defineConfig({
-  plugins: [pluginReact()],
+  plugins: [pluginReact(), pluginSass()],
   source: {
     entry: {
       index: "./src/main.tsx",

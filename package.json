@@ -28,6 +28,7 @@
     "@douyinfe/semi-rspack-plugin": "^2.76.1",
     "@rsbuild/core": "^1.2.16",
     "@rsbuild/plugin-react": "^1.1.1",
+    "@rsbuild/plugin-sass": "^1.2.2",
     "@tailwindcss/postcss": "^4.0.14",
     "@tanstack/router-plugin": "^1.114.23",
     "@tauri-apps/cli": "^2.3.1",
