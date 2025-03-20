@@ -1,17 +1,15 @@
 import React from "react";
-import { Avatar, Button, Divider } from "@douyinfe/semi-ui";
+import { Button } from "@douyinfe/semi-ui";
 import { Home, MessageOne, Setting, Peoples } from "@icon-park/react";
 import { Link } from "@tanstack/react-router";
+import { User } from "@/components/User";
 
 export const Sidebar: React.FC = () => {
   return (
-    <div className="w-16 h-full flex flex-col items-center py-4 border-gray-200 border-r">
+    <div className="w-16 h-full flex flex-col items-center py-4 semi-border-color border-r">
       {/* 头像 */}
       <div>
-        <Avatar size="small" color="blue">
-          XG
-        </Avatar>
-        <Divider margin={10} />
+        <User />
       </div>
 
       {/* 导航图标 */}
@@ -27,8 +25,9 @@ export const Sidebar: React.FC = () => {
         <Link to="/chat">
           <Button
             size="large"
-            type="tertiary"
-            theme="borderless"
+            // type="tertiary"
+            type="primary"
+            // theme="borderless"
             icon={<MessageOne size={18} />}
           />
         </Link>

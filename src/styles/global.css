@@ -1,8 +1,29 @@
 @import 'tailwindcss';
-@custom-variant dark (&:where([data-theme="dark"], [data-theme="dark"] *));
-@custom-variant light (&:where([data-theme="light"], [data-theme="light"] *));
+@custom-variant dark (&:where([theme-mode="dark"], [theme-mode="dark"] *));
+@custom-variant light (&:where([theme-mode="light"], [theme-mode="light"] *));
 
+:root {
+    --border-color:rgba(0, 0, 0, 0.12);
+}
 body {
     color: var(--semi-color-text-0);
     background-color: var( --semi-color-bg-0);
+}
+
+.semi-border-color {
+    border-color:var(--border-color)
+}
+[theme-mode="dark"] .semi-border-color {
+    border-color:var(--semi-color-border)
+}
+
+.semi-bg-background {
+    background-color:var(--semi-color-bg-0)
+   
+}
+.semi-bg-background-page {
+    background-color:var(--color-gray-50)
+}
+[theme-mode="dark"] .semi-bg-background-page {
+    background-color:var(--semi-color-bg-1)
 }

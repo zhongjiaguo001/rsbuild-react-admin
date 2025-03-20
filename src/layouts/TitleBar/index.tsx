@@ -34,7 +34,7 @@ export const TitleBar = ({
   return (
     <div
       data-tauri-drag-region
-      className="flex items-center justify-end p-2 border-b border-gray-200"
+      className="flex items-center justify-end p-2 border-b semi-border-color"
     >
       <div className="flex items-center gap-2">
         <Avatar

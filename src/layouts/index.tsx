@@ -1,26 +1,20 @@
 import { Layout } from "@douyinfe/semi-ui";
-import { Outlet, createRootRoute } from "@tanstack/react-router";
+import { Outlet } from "@tanstack/react-router";
 import { TitleBar } from "@/layouts/TitleBar";
 import { Sidebar } from "@/layouts/Sidebar";
-import { Loading } from "@/components/Loading";
-
-export const Route = createRootRoute({
-  component: RootLayout,
-  pendingComponent: () => Loading,
-});
 
 export function RootLayout() {
   const { Sider, Content, Header } = Layout;
   return (
-    <Layout className="h-screen">
-      <Header>
+    <Layout className="h-screen flex flex-col">
+      <Header className="flex-shrink-0">
         <TitleBar />
       </Header>
-      <Layout>
-        <Sider>
+      <Layout className="flex-grow overflow-hidden">
+        <Sider className="h-full">
           <Sidebar />
         </Sider>
-        <Content>
+        <Content className="h-full semi-bg-background-page semi-light-scrollbar overflow-auto">
           <Outlet />
         </Content>
       </Layout>

@@ -12,6 +12,8 @@
   "app": {
     "windows": [
       {
+        "width": 1280,
+        "height": 960,
         "decorations": false
       }
     ],
