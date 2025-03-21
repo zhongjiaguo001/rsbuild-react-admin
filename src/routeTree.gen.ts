@@ -13,155 +13,177 @@ import { createFileRoute } from '@tanstack/react-router'
 // Import Routes
 
 import { Route as rootRoute } from './routes/__root'
-import { Route as authLoginIndexImport } from './routes/(auth)/login/index'
-import { Route as authLoginlayoutImport } from './routes/(auth)/login/__layout'
+import { Route as AppImport } from './routes/_app'
 
 // Create Virtual Routes
 
-const authLoginImport = createFileRoute('/(auth)/login')()
-const appIndexLazyImport = createFileRoute('/(app)/')()
-const appChatIndexLazyImport = createFileRoute('/(app)/chat/')()
+const LoginIndexLazyImport = createFileRoute('/login/')()
+const AppIndexLazyImport = createFileRoute('/_app/')()
+const AppSettingsIndexLazyImport = createFileRoute('/_app/settings/')()
+const AppContactIndexLazyImport = createFileRoute('/_app/contact/')()
+const AppChatIndexLazyImport = createFileRoute('/_app/chat/')()
 
 // Create/Update Routes
 
-const authLoginRoute = authLoginImport.update({
-  id: '/(auth)/login',
-  path: '/login',
+const AppRoute = AppImport.update({
+  id: '/_app',
   getParentRoute: () => rootRoute,
 } as any)
 
-const appIndexLazyRoute = appIndexLazyImport
-  .update({
-    id: '/(app)/',
-    path: '/',
-    getParentRoute: () => rootRoute,
-  } as any)
-  .lazy(() => import('./routes/(app)/index.lazy').then((d) => d.Route))
+const LoginIndexLazyRoute = LoginIndexLazyImport.update({
+  id: '/login/',
+  path: '/login/',
+  getParentRoute: () => rootRoute,
+} as any).lazy(() => import('./routes/login/index.lazy').then((d) => d.Route))
 
-const appChatIndexLazyRoute = appChatIndexLazyImport
-  .update({
-    id: '/(app)/chat/',
-    path: '/chat/',
-    getParentRoute: () => rootRoute,
-  } as any)
-  .lazy(() => import('./routes/(app)/chat/index.lazy').then((d) => d.Route))
-
-const authLoginIndexRoute = authLoginIndexImport.update({
+const AppIndexLazyRoute = AppIndexLazyImport.update({
   id: '/',
   path: '/',
-  getParentRoute: () => authLoginRoute,
-} as any)
+  getParentRoute: () => AppRoute,
+} as any).lazy(() => import('./routes/_app/index.lazy').then((d) => d.Route))
 
-const authLoginlayoutRoute = authLoginlayoutImport.update({
-  id: '/__layout',
-  getParentRoute: () => authLoginRoute,
-} as any)
+const AppSettingsIndexLazyRoute = AppSettingsIndexLazyImport.update({
+  id: '/settings/',
+  path: '/settings/',
+  getParentRoute: () => AppRoute,
+} as any).lazy(() =>
+  import('./routes/_app/settings/index.lazy').then((d) => d.Route),
+)
+
+const AppContactIndexLazyRoute = AppContactIndexLazyImport.update({
+  id: '/contact/',
+  path: '/contact/',
+  getParentRoute: () => AppRoute,
+} as any).lazy(() =>
+  import('./routes/_app/contact/index.lazy').then((d) => d.Route),
+)
+
+const AppChatIndexLazyRoute = AppChatIndexLazyImport.update({
+  id: '/chat/',
+  path: '/chat/',
+  getParentRoute: () => AppRoute,
+} as any).lazy(() =>
+  import('./routes/_app/chat/index.lazy').then((d) => d.Route),
+)
 
 // Populate the FileRoutesByPath interface
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
-    '/(app)/': {
-      id: '/(app)/'
+    '/_app': {
+      id: '/_app'
+      path: ''
+      fullPath: ''
+      preLoaderRoute: typeof AppImport
+      parentRoute: typeof rootRoute
+    }
+    '/_app/': {
+      id: '/_app/'
       path: '/'
       fullPath: '/'
-      preLoaderRoute: typeof appIndexLazyImport
-      parentRoute: typeof rootRoute
+      preLoaderRoute: typeof AppIndexLazyImport
+      parentRoute: typeof AppImport
     }
-    '/(auth)/login': {
-      id: '/(auth)/login'
+    '/login/': {
+      id: '/login/'
       path: '/login'
       fullPath: '/login'
-      preLoaderRoute: typeof authLoginImport
+      preLoaderRoute: typeof LoginIndexLazyImport
       parentRoute: typeof rootRoute
     }
-    '/(auth)/login/__layout': {
-      id: '/(auth)/login/__layout'
-      path: '/login'
-      fullPath: '/login'
-      preLoaderRoute: typeof authLoginlayoutImport
-      parentRoute: typeof authLoginRoute
-    }
-    '/(auth)/login/': {
-      id: '/(auth)/login/'
-      path: '/'
-      fullPath: '/login/'
-      preLoaderRoute: typeof authLoginIndexImport
-      parentRoute: typeof authLoginImport
-    }
-    '/(app)/chat/': {
-      id: '/(app)/chat/'
+    '/_app/chat/': {
+      id: '/_app/chat/'
       path: '/chat'
       fullPath: '/chat'
-      preLoaderRoute: typeof appChatIndexLazyImport
-      parentRoute: typeof rootRoute
+      preLoaderRoute: typeof AppChatIndexLazyImport
+      parentRoute: typeof AppImport
+    }
+    '/_app/contact/': {
+      id: '/_app/contact/'
+      path: '/contact'
+      fullPath: '/contact'
+      preLoaderRoute: typeof AppContactIndexLazyImport
+      parentRoute: typeof AppImport
+    }
+    '/_app/settings/': {
+      id: '/_app/settings/'
+      path: '/settings'
+      fullPath: '/settings'
+      preLoaderRoute: typeof AppSettingsIndexLazyImport
+      parentRoute: typeof AppImport
     }
   }
 }
 
 // Create and export the route tree
 
-interface authLoginRouteChildren {
-  authLoginlayoutRoute: typeof authLoginlayoutRoute
-  authLoginIndexRoute: typeof authLoginIndexRoute
+interface AppRouteChildren {
+  AppIndexLazyRoute: typeof AppIndexLazyRoute
+  AppChatIndexLazyRoute: typeof AppChatIndexLazyRoute
+  AppContactIndexLazyRoute: typeof AppContactIndexLazyRoute
+  AppSettingsIndexLazyRoute: typeof AppSettingsIndexLazyRoute
 }
 
-const authLoginRouteChildren: authLoginRouteChildren = {
-  authLoginlayoutRoute: authLoginlayoutRoute,
-  authLoginIndexRoute: authLoginIndexRoute,
+const AppRouteChildren: AppRouteChildren = {
+  AppIndexLazyRoute: AppIndexLazyRoute,
+  AppChatIndexLazyRoute: AppChatIndexLazyRoute,
+  AppContactIndexLazyRoute: AppContactIndexLazyRoute,
+  AppSettingsIndexLazyRoute: AppSettingsIndexLazyRoute,
 }
 
-const authLoginRouteWithChildren = authLoginRoute._addFileChildren(
-  authLoginRouteChildren,
-)
+const AppRouteWithChildren = AppRoute._addFileChildren(AppRouteChildren)
 
 export interface FileRoutesByFullPath {
-  '/': typeof appIndexLazyRoute
-  '/login': typeof authLoginlayoutRoute
-  '/login/': typeof authLoginIndexRoute
-  '/chat': typeof appChatIndexLazyRoute
+  '': typeof AppRouteWithChildren
+  '/': typeof AppIndexLazyRoute
+  '/login': typeof LoginIndexLazyRoute
+  '/chat': typeof AppChatIndexLazyRoute
+  '/contact': typeof AppContactIndexLazyRoute
+  '/settings': typeof AppSettingsIndexLazyRoute
 }
 
 export interface FileRoutesByTo {
-  '/': typeof appIndexLazyRoute
-  '/login': typeof authLoginIndexRoute
-  '/chat': typeof appChatIndexLazyRoute
+  '/': typeof AppIndexLazyRoute
+  '/login': typeof LoginIndexLazyRoute
+  '/chat': typeof AppChatIndexLazyRoute
+  '/contact': typeof AppContactIndexLazyRoute
+  '/settings': typeof AppSettingsIndexLazyRoute
 }
 
 export interface FileRoutesById {
   __root__: typeof rootRoute
-  '/(app)/': typeof appIndexLazyRoute
-  '/(auth)/login': typeof authLoginRouteWithChildren
-  '/(auth)/login/__layout': typeof authLoginlayoutRoute
-  '/(auth)/login/': typeof authLoginIndexRoute
-  '/(app)/chat/': typeof appChatIndexLazyRoute
+  '/_app': typeof AppRouteWithChildren
+  '/_app/': typeof AppIndexLazyRoute
+  '/login/': typeof LoginIndexLazyRoute
+  '/_app/chat/': typeof AppChatIndexLazyRoute
+  '/_app/contact/': typeof AppContactIndexLazyRoute
+  '/_app/settings/': typeof AppSettingsIndexLazyRoute
 }
 
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/' | '/login' | '/login/' | '/chat'
+  fullPaths: '' | '/' | '/login' | '/chat' | '/contact' | '/settings'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/login' | '/chat'
+  to: '/' | '/login' | '/chat' | '/contact' | '/settings'
   id:
     | '__root__'
-    | '/(app)/'
-    | '/(auth)/login'
-    | '/(auth)/login/__layout'
-    | '/(auth)/login/'
-    | '/(app)/chat/'
+    | '/_app'
+    | '/_app/'
+    | '/login/'
+    | '/_app/chat/'
+    | '/_app/contact/'
+    | '/_app/settings/'
   fileRoutesById: FileRoutesById
 }
 
 export interface RootRouteChildren {
-  appIndexLazyRoute: typeof appIndexLazyRoute
-  authLoginRoute: typeof authLoginRouteWithChildren
-  appChatIndexLazyRoute: typeof appChatIndexLazyRoute
+  AppRoute: typeof AppRouteWithChildren
+  LoginIndexLazyRoute: typeof LoginIndexLazyRoute
 }
 
 const rootRouteChildren: RootRouteChildren = {
-  appIndexLazyRoute: appIndexLazyRoute,
-  authLoginRoute: authLoginRouteWithChildren,
-  appChatIndexLazyRoute: appChatIndexLazyRoute,
+  AppRoute: AppRouteWithChildren,
+  LoginIndexLazyRoute: LoginIndexLazyRoute,
 }
 
 export const routeTree = rootRoute
@@ -174,31 +196,37 @@ export const routeTree = rootRoute
     "__root__": {
       "filePath": "__root.tsx",
       "children": [
-        "/(app)/",
-        "/(auth)/login",
-        "/(app)/chat/"
+        "/_app",
+        "/login/"
       ]
     },
-    "/(app)/": {
-      "filePath": "(app)/index.lazy.tsx"
-    },
-    "/(auth)/login": {
-      "filePath": "(auth)/login",
+    "/_app": {
+      "filePath": "_app.tsx",
       "children": [
-        "/(auth)/login/__layout",
-        "/(auth)/login/"
+        "/_app/",
+        "/_app/chat/",
+        "/_app/contact/",
+        "/_app/settings/"
       ]
     },
-    "/(auth)/login/__layout": {
-      "filePath": "(auth)/login/__layout.tsx",
-      "parent": "/(auth)/login"
+    "/_app/": {
+      "filePath": "_app/index.lazy.tsx",
+      "parent": "/_app"
     },
-    "/(auth)/login/": {
-      "filePath": "(auth)/login/index.tsx",
-      "parent": "/(auth)/login"
+    "/login/": {
+      "filePath": "login/index.lazy.tsx"
     },
-    "/(app)/chat/": {
-      "filePath": "(app)/chat/index.lazy.tsx"
+    "/_app/chat/": {
+      "filePath": "_app/chat/index.lazy.tsx",
+      "parent": "/_app"
+    },
+    "/_app/contact/": {
+      "filePath": "_app/contact/index.lazy.tsx",
+      "parent": "/_app"
+    },
+    "/_app/settings/": {
+      "filePath": "_app/settings/index.lazy.tsx",
+      "parent": "/_app"
     }
   }
 }

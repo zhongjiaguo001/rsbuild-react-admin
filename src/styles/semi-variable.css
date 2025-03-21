@@ -1,3 +1,4 @@
-:root {
+body, body[theme-mode=dark] .semi-always-light { 
     --semi-primary-color: var(--semi-brand-5)
+    --semi-border-radius-small:12px;
 }
