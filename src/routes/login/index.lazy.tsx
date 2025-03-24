@@ -117,6 +117,7 @@ function RouteComponent() {
             />
           )}
           <Form.Input
+            size="large"
             field="email"
             label="邮箱"
             placeholder="请输入邮箱地址"
@@ -129,6 +130,7 @@ function RouteComponent() {
             ]}
           />
           <Form.Input
+            size="large"
             field="verification_code"
             label="验证码"
             placeholder="请输入验证码"
@@ -136,7 +138,8 @@ function RouteComponent() {
             rules={[{ required: true, message: "请输入验证码" }]}
             addonAfter={
               <Button
-                className="self-end"
+                theme="borderless"
+                className="self-center"
                 disabled={countdown > 0}
                 onClick={handleSendCode}
               >
@@ -157,6 +160,7 @@ function RouteComponent() {
           <Button
             theme="solid"
             type="primary"
+            size="large"
             htmlType="submit"
             className="w-full"
             loading={authMutation.isPending}
