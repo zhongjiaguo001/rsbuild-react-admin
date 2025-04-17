@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { Button } from "@douyinfe/semi-ui";
-import { SunOne, Moon } from "@icon-park/react";
+import { IconSun, IconMoon } from "@douyinfe/semi-icons";
 
 export function ThemeToggle() {
   const [theme, setTheme] = useState("light");
@@ -21,9 +21,9 @@ export function ThemeToggle() {
       type="tertiary"
       icon={
         theme === "light" ? (
-          <Moon theme="filled" size="18" />
+          <IconMoon size="extra-large" />
         ) : (
-          <SunOne theme="filled" size="18" />
+          <IconSun size="extra-large" />
         )
       }
       onClick={switchMode}

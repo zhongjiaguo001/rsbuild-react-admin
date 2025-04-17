@@ -1,9 +1,11 @@
 import axios, { AxiosInstance, AxiosResponse, AxiosError } from "axios";
 import type { ApiResponse, RequestOptions } from "@/types/request";
 import { Toast } from "@douyinfe/semi-ui";
+import { userStore } from "@/store";
 
 // 环境变量中的API URL，如果没有则使用默认值
-const API_URL = import.meta.env.RS_BASE_API_URL || "http://localhost:3000/api";
+const API_URL =
+  import.meta.env.RS_BASE_API_URL + "/api" || "http://localhost:3000/api";
 
 // 默认配置
 const defaultOptions: RequestOptions = {
@@ -29,7 +31,7 @@ const createAxiosInstance = (options?: RequestOptions): AxiosInstance => {
   instance.interceptors.request.use(
     (config) => {
       // 获取token并添加到请求头
-      const token = localStorage.getItem("token");
+      const token = userStore.getState().token;
       if (token && config.headers) {
         config.headers.Authorization = `Bearer ${token}`;
       }
@@ -64,7 +66,7 @@ const createAxiosInstance = (options?: RequestOptions): AxiosInstance => {
       }
 
       // 直接返回data部分
-      return response.data.data;
+      return response.data;
     },
     async (error: AxiosError) => {
       const config = error.config as any;
@@ -74,31 +76,6 @@ const createAxiosInstance = (options?: RequestOptions): AxiosInstance => {
       if (requestOptions?.showLoading) {
         // TODO: 隐藏全局loading
         console.log("隐藏loading");
-      }
-
-      // 处理请求重试
-      if (
-        requestOptions?.retryCount &&
-        requestOptions.retryCount > 0 &&
-        config
-      ) {
-        // 设置重试计数器
-        config.retryCount = config.retryCount ?? 0;
-        config.requestOptions = {
-          ...requestOptions,
-          retryCount: requestOptions.retryCount - 1,
-        };
-
-        // 如果重试次数未达到上限，则重试
-        if (config.retryCount < requestOptions.retryCount) {
-          config.retryCount += 1;
-
-          // 延迟重试
-          const delay = requestOptions.retryDelay || 1000;
-          await new Promise((resolve) => setTimeout(resolve, delay));
-
-          return instance(config);
-        }
       }
 
       // 处理错误
@@ -124,36 +101,44 @@ const handleError = (error: AxiosError) => {
   const { response } = error;
   let message = (response?.data as ApiResponse)?.message || "请求失败";
 
-  // if (response) {
-  //   const status = response.status;
+  if (response) {
+    const status = response.status;
 
-  //   // 根据状态码处理错误
-  //   switch (status) {
-  //     case 400:
-  //       message = "请求错误";
-  //       break;
-  //     case 401:
-  //       message = "未授权，请重新登录";
-  //       // 可以在这里处理登出逻辑
-  //       // logout();
-  //       break;
-  //     case 403:
-  //       message = "拒绝访问";
-  //       break;
-  //     case 404:
-  //       message = "请求地址不存在";
-  //       break;
-  //     case 500:
-  //       message = "服务器内部错误";
-  //       break;
-  //     default:
-  //       message = `请求失败(${status})`;
-  //   }
-  // } else if (error.message.includes("timeout")) {
-  //   message = "请求超时";
-  // } else if (error.message.includes("Network")) {
-  //   message = "网络异常";
-  // }
+    if (status === 401) {
+      //   case 401:
+      // message = "未授权，请重新登录";
+      // 可以在这里处理登出逻辑
+      // logout();
+      window.location.href = "/login";
+    }
+    // 根据状态码处理错误
+    // switch (status) {
+    //   case 400:
+    //     message = "请求错误";
+    //     break;
+    //   case 401:
+    //     message = "未授权，请重新登录";
+    //     // 可以在这里处理登出逻辑
+    //     // logout();
+    //     // window.location.href = "/login";
+    //     break;
+    //   case 403:
+    //     message = "拒绝访问";
+    //     break;
+    //   case 404:
+    //     message = "请求地址不存在";
+    //     break;
+    //   case 500:
+    //     message = "服务器内部错误";
+    //     break;
+    //   default:
+    //     message = `请求失败(${status})`;
+    // }
+  } else if (error.message.includes("timeout")) {
+    message = "请求超时";
+  } else if (error.message.includes("Network")) {
+    message = "网络异常";
+  }
   if (error.message.includes("timeout")) {
     message = "请求超时";
   } else if (error.message.includes("Network")) {

@@ -2,7 +2,7 @@
 import { create } from "zustand";
 import { persist } from "zustand/middleware";
 import { immer } from "zustand/middleware/immer";
-import { type UserDataType, userApi } from "@/api/user";
+import { type UserDataType, loginApi } from "@/api/login";
 
 type UserState = {
   user?: UserDataType;
@@ -40,7 +40,7 @@ export const userStore = create<UserState & UserActions>()(
 
       logout: async () => {
         try {
-          await userApi.logout();
+          await loginApi.logout();
           set(defaultUserState);
         } catch (error) {
           throw error;

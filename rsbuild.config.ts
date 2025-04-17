@@ -3,6 +3,7 @@ import { pluginReact } from "@rsbuild/plugin-react";
 import { TanStackRouterRspack } from "@tanstack/router-plugin/rspack";
 import { pluginSass } from "@rsbuild/plugin-sass";
 import { SemiRspackPlugin } from "@douyinfe/semi-rspack-plugin";
+
 export default defineConfig({
   plugins: [pluginSass(), pluginReact()],
   source: {
@@ -16,6 +17,7 @@ export default defineConfig({
     },
   },
   server: {
+    port: 8080,
     historyApiFallback: true,
   },
   resolve: {
@@ -27,7 +29,7 @@ export default defineConfig({
     rspack: {
       plugins: [
         new SemiRspackPlugin({
-          theme: "@semi-bot/semi-theme-guoblog",
+          theme: "@semi-bot/semi-theme-hero-ui",
         }),
         TanStackRouterRspack({ target: "react", autoCodeSplitting: true }),
       ],
