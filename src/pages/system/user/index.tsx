@@ -13,6 +13,7 @@ import { UserModal } from "./components/UserModal";
 import { DelBtn, AddBtn, SearchForm } from "@/components";
 import type { SearchFieldConfig } from "@/types/search-form";
 import { useNavigate } from "react-router-dom";
+import type { ColumnProps } from "@douyinfe/semi-ui/lib/es/table";
 
 function UserPage() {
   const navigate = useNavigate();
@@ -66,7 +67,7 @@ function UserPage() {
 
   // 修改用户状态
   const changeStatusMutation = useMutation({
-    mutationFn: ({ id, status }: { id: number; status: number }) =>
+    mutationFn: ({ id, status }: { id: number; status: string }) =>
       userApi.changeStatus(id, status),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: [userQueryKey] });
@@ -136,7 +137,7 @@ function UserPage() {
     },
   ];
 
-  const columns = [
+  const columns: ColumnProps<UserInfo>[] = [
     {
       title: "ID",
       dataIndex: "id",
@@ -170,9 +171,9 @@ function UserPage() {
       width: 80,
       title: "状态",
       dataIndex: "status",
-      render: (text: boolean, record: UserInfo) => (
+      render: (text: string, record: UserInfo) => (
         <Switch
-          checked={text}
+          checked={text === "0"}
           onChange={(status) => {
             Modal.confirm({
               centered: true,
@@ -181,7 +182,7 @@ function UserPage() {
               onOk: () => {
                 changeStatusMutation.mutate({
                   id: record.id,
-                  status: status ? 1 : 0,
+                  status: status ? "0" : "1",
                 });
               },
             });

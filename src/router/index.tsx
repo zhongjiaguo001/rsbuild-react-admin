@@ -31,6 +31,10 @@ export const routes = [
         element: <Chat />,
       },
       {
+        path: "/chat/:sessionId",
+        element: <Chat />,
+      },
+      {
         path: "/system",
         children: [
           {

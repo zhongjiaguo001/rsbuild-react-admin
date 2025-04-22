@@ -1,4 +1,8 @@
 import { Spin } from "@douyinfe/semi-ui";
 export function Loading() {
-  return <Spin tip="加载中..." />;
+  return (
+    <div className="h-full w-full flex justify-center items-center">
+      <Spin size="large" />
+    </div>
+  );
 }

@@ -7,7 +7,7 @@ export interface UserInfo {
   department: string;
   phone: string;
   email: string;
-  status: boolean;
+  status: string;
   position: string;
   remark?: string;
   createdAt?: string;
@@ -30,7 +30,7 @@ export interface UserForm {
   department: string;
   phone: string;
   email: string;
-  status: boolean;
+  status: string;
   position: string;
   remark?: string;
   createdAt?: string;
@@ -64,7 +64,7 @@ export const userApi = {
    * 修改用户
    */
   update: (data: UserForm) => {
-    return request.put(`/system/user/${data.id}`, data, {
+    return request.put(`/system/user`, data, {
       showMessage: true,
     });
   },
@@ -80,9 +80,9 @@ export const userApi = {
    * 重置密码
    */
   resetPassword: (id: number, newPassword: string) => {
-    return request.patch(
-      `/system/user/${id}/password`,
-      { newPassword },
+    return request.put(
+      `/system/user/resetPwd`,
+      { id, newPassword },
       { showMessage: true }
     );
   },
@@ -90,8 +90,8 @@ export const userApi = {
   /**
    * 修改用户状态
    */
-  changeStatus: (id: number, status: number) => {
-    return request.post(`/system/user/status`, { id, status });
+  changeStatus: (id: number, status: string) => {
+    return request.put(`/system/user/changeStatus`, { id, status });
   },
 
   /**
