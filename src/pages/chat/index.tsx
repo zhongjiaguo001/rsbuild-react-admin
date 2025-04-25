@@ -6,7 +6,7 @@ import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { chatApi, type Message } from "@/api/chat";
 import { ROLE_CONFIG, ALLOWED_FILE_TYPES, MAX_FILE_SIZE } from "./constants";
 import SessionList from "./components/SessionList";
-import { useParams, useNavigate } from "react-router-dom";
+import { useParams, useNavigate } from "@tanstack/react-router";
 import { userStore } from "@/store";
 const { Sider, Content: LayoutContent } = Layout;
 

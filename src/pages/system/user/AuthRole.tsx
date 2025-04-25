@@ -1,5 +1,5 @@
 import { Card, Table, Button, Pagination, Toast } from "@douyinfe/semi-ui";
-import { useParams, useNavigate, useLocation } from "react-router-dom";
+import { useParams, useNavigate, useLocation } from "@tanstack/react-router";
 import { useState } from "react";
 import { roleApi } from "@/api/system/role";
 import { userApi } from "@/api/system/user";

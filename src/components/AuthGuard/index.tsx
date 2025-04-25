@@ -1,5 +1,5 @@
 import { ReactNode, useEffect } from "react";
-import { Navigate, useLocation } from "react-router-dom";
+import { Navigate, useLocation } from "@tanstack/react-router";
 import { userStore } from "@/store";
 import { Toast } from "@douyinfe/semi-ui";
 

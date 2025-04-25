@@ -10,15 +10,15 @@ import {
 import { useMutation } from "@tanstack/react-query";
 import { LoginType, loginApi } from "@/api/login";
 import type { FormApi } from "@douyinfe/semi-ui/lib/es/form";
-import { useNavigate } from "react-router-dom";
-import { userStore } from "@/store";
+import { useNavigate } from "@tanstack/react-router";
+import { useAuthStore } from "@/store";
 
 const { Title } = Typography;
 
 function LoginPage() {
   const navigate = useNavigate();
   const formRef = useRef<FormApi>();
-  const setToken = userStore((state) => state.setToken);
+  const setToken = useAuthStore((state) => state.setToken);
   const [captcha, setCaptcha] = useState<string>();
 
   // 登录
@@ -29,7 +29,7 @@ function LoginPage() {
     },
     onSuccess: (data) => {
       setToken(data); // 确认这里的 data 是否就是 token 字符串
-      navigate("/");
+      navigate({ to: "/" });
       Toast.success("登录成功");
     },
   });

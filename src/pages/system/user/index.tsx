@@ -12,7 +12,7 @@ import { format } from "date-fns";
 import { UserModal } from "./components/UserModal";
 import { DelBtn, AddBtn, SearchForm } from "@/components";
 import type { SearchFieldConfig } from "@/types/search-form";
-import { useNavigate } from "react-router-dom";
+import { useNavigate } from "@tanstack/react-router";
 import type { ColumnProps } from "@douyinfe/semi-ui/lib/es/table";
 
 function UserPage() {

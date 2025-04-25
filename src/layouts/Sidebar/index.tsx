@@ -1,6 +1,6 @@
 import React from "react";
 import { Nav } from "@douyinfe/semi-ui";
-import { useNavigate } from "react-router-dom";
+import { useNavigate } from "@tanstack/react-router";
 import { IconHome, IconSetting, IconComment } from "@douyinfe/semi-icons";
 
 // 定义一个静态的系统管理模块路由 包含用户 角色 菜单 员工 部门 权限 日志 字典 配置等
@@ -58,7 +58,7 @@ export const Sidebar: React.FC = () => {
   return (
     <Nav
       className="h-full semi-border-color border-r"
-      onSelect={(key) => navigate(key.itemKey as string)}
+      onSelect={(key) => navigate({ to: key.itemKey as string })}
       items={items}
       footer={{
         collapseButton: true,
