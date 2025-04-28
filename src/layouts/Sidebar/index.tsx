@@ -57,7 +57,7 @@ export const Sidebar: React.FC = () => {
   const navigate = useNavigate();
   return (
     <Nav
-      className="h-full semi-border-color border-r"
+      className="h-full semi-border-color border-r !bg-transparent"
       onSelect={(key) => navigate({ to: key.itemKey as string })}
       items={items}
       footer={{

@@ -1,14 +1,23 @@
 import { Card, Table, Button, Pagination, Toast } from "@douyinfe/semi-ui";
-import { useParams, useNavigate, useLocation } from "@tanstack/react-router";
+import {
+  useParams,
+  useRouterState,
+  useNavigate,
+  createLazyFileRoute,
+} from "@tanstack/react-router";
 import { useState } from "react";
 import { roleApi } from "@/api/system/role";
-import { userApi } from "@/api/system/user";
+import { assignRoles } from "@/api/system/user";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 
 function AuthRole() {
-  const location = useLocation();
-  const { roleIds } = location.state;
-  const { userId } = useParams<{ userId: string }>();
+  const { search } = useRouterState().location;
+  const params = new URLSearchParams(search);
+  const roleIdsParam = params.get("roleIds");
+  const roleIds = roleIdsParam ? roleIdsParam.split(",").map(Number) : [];
+  const { id: userId } = useParams({
+    from: "/_layout/system/user/auth-role/$id",
+  });
   const navigate = useNavigate();
   const queryClient = useQueryClient();
   const [selectedRoleIds, setSelectedRoleIds] = useState<number[]>(roleIds);
@@ -17,7 +26,6 @@ function AuthRole() {
     pageSize: 10,
     total: 0,
   });
-
   // 获取角色列表
   const { data: roleData, isLoading } = useQuery({
     queryKey: ["roleList", pagination.currentPage, pagination.pageSize],
@@ -38,8 +46,7 @@ function AuthRole() {
 
   // 分配角色
   const assignRoleMutation = useMutation({
-    mutationFn: (roleIds: number[]) =>
-      userApi.assignRoles(Number(userId), roleIds),
+    mutationFn: (roleIds: number[]) => assignRoles(Number(userId), roleIds),
     onSuccess: () => {
       Toast.success("分配角色成功");
       queryClient.invalidateQueries({ queryKey: ["userRoles"] });
@@ -73,9 +80,7 @@ function AuthRole() {
   };
 
   // 返回用户列表
-  const handleReturn = () => {
-    navigate(-1);
-  };
+  const handleReturn = () => navigate({ to: "/system/user" });
 
   // 表格列定义
   const columns = [
@@ -150,4 +155,6 @@ function AuthRole() {
   );
 }
 
-export default AuthRole;
+export const Route = createLazyFileRoute("/_layout/system/user/auth-role/$id")({
+  component: AuthRole,
+});

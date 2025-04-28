@@ -7,7 +7,7 @@ export function RootLayout() {
   const { Sider, Content, Header } = Layout;
   return (
     <Layout className="h-screen flex flex-col">
-      <Header className="flex-shrink-0 border-b border-[var(--semi-color-border)] bg-[var(--semi-color-bg-1)]">
+      <Header className="px-[24px] flex-shrink-0 border-b border-[var(--semi-color-border)] bg-[var(--semi-color-bg-1)]">
         <TitleBar />
       </Header>
       <Layout className="flex-grow overflow-hidden">

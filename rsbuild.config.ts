@@ -31,8 +31,16 @@ export default defineConfig({
         new SemiRspackPlugin({
           theme: "@semi-bot/semi-theme-hero-ui",
         }),
-        TanStackRouterRspack({ target: "react", autoCodeSplitting: true }),
+        TanStackRouterRspack({
+          routesDirectory: "./src/routes",
+          generatedRouteTree: "./src/routeTree.gen.ts",
+          routeFileIgnorePrefix: "-",
+          autoCodeSplitting: true,
+        }),
       ],
     },
+  },
+  performance: {
+    removeConsole: true,
   },
 });

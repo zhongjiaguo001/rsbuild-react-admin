@@ -18,7 +18,9 @@ export function ThemeToggle() {
   return (
     <Button
       theme="borderless"
-      type="tertiary"
+      style={{
+        color: "var(--semi-color-text-2)",
+      }}
       icon={
         theme === "light" ? (
           <IconMoon size="extra-large" />

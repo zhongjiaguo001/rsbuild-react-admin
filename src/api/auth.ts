@@ -92,6 +92,6 @@ export const authApi = {
    * 获取用户菜单
    */
   getUserMenus: () => {
-    return request.get("/system/menu/getRouters");
+    return request.get("/auth/getRouters");
   },
 };

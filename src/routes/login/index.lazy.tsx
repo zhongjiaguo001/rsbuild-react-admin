@@ -1,3 +1,5 @@
+// src/routes/login.tsx
+import { createLazyFileRoute } from "@tanstack/react-router";
 import { useRef, useState, useEffect } from "react";
 import {
   Form,
@@ -8,7 +10,7 @@ import {
   Image,
 } from "@douyinfe/semi-ui";
 import { useMutation } from "@tanstack/react-query";
-import { LoginType, loginApi } from "@/api/login";
+import { LoginParams, authApi } from "@/api/auth";
 import type { FormApi } from "@douyinfe/semi-ui/lib/es/form";
 import { useNavigate } from "@tanstack/react-router";
 import { useAuthStore } from "@/store";
@@ -23,8 +25,8 @@ function LoginPage() {
 
   // 登录
   const authMutation = useMutation({
-    mutationFn: async (values: LoginType) => {
-      const response = await loginApi.login(values);
+    mutationFn: async (values: LoginParams) => {
+      const response = await authApi.login(values);
       return response.data;
     },
     onSuccess: (data) => {
@@ -36,7 +38,7 @@ function LoginPage() {
 
   // 获取验证码
   const getCaptchaImg = async () => {
-    const { data } = await loginApi.getCodeImg();
+    const { data } = await authApi.getCodeImg();
     setCaptcha(data);
   };
   useEffect(() => {
@@ -112,4 +114,6 @@ function LoginPage() {
   );
 }
 
-export default LoginPage;
+export const Route = createLazyFileRoute("/login/")({
+  component: LoginPage,
+});

@@ -20,7 +20,7 @@ export function UserModal({
   const formRef = useRef<FormApi>();
 
   const onSubmit = async () => {
-    const values = await formRef!.current!.validate();
+    const values = (await formRef!.current!.validate()) as UserForm;
     onOk(values);
   };
 

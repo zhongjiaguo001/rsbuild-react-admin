@@ -1,19 +1,31 @@
+import { createLazyFileRoute } from "@tanstack/react-router";
+
 import { Card, Button, Table, Switch, Modal, Form } from "@douyinfe/semi-ui";
 import { useState } from "react";
 import {
-  userApi,
+  listUser,
+  addUser,
+  updateUser,
+  deleteUser,
+  changeStatus,
+  resetPassword,
+  assignRoles,
   type UserInfo,
   type UserQuery,
   type UserForm,
 } from "@/api/system/user";
-import { AssignRoleModal } from "./components/AssignRoleModal";
+import { AssignRoleModal } from "./-components/AssignRoleModal";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { format } from "date-fns";
-import { UserModal } from "./components/UserModal";
+import { UserModal } from "./-components/UserModal";
 import { DelBtn, AddBtn, SearchForm } from "@/components";
 import type { SearchFieldConfig } from "@/types/search-form";
 import { useNavigate } from "@tanstack/react-router";
 import type { ColumnProps } from "@douyinfe/semi-ui/lib/es/table";
+
+export const Route = createLazyFileRoute("/_layout/system/user/")({
+  component: UserPage,
+});
 
 function UserPage() {
   const navigate = useNavigate();
@@ -33,13 +45,13 @@ function UserPage() {
   // 获取用户列表
   const { data: userList, isLoading } = useQuery({
     queryKey: [userQueryKey, searchParams],
-    queryFn: () => userApi.getList(searchParams).then((res) => res.data),
+    queryFn: () => listUser(searchParams).then((res) => res.data),
   });
 
   // 新增/修改用户
   const saveMutation = useMutation({
     mutationFn: (values: UserForm) => {
-      return values.id ? userApi.update(values) : userApi.add(values);
+      return values.id ? updateUser(values) : addUser(values);
     },
     onSuccess: () => {
       setModalVisible(false);
@@ -51,13 +63,13 @@ function UserPage() {
   // 重置密码
   const resetPasswordMutation = useMutation({
     mutationFn: ({ id, password }: { id: number; password: string }) =>
-      userApi.resetPassword(id, password),
+      resetPassword(id, password),
   });
 
   // 分配角色
   const assignRoleMutation = useMutation({
     mutationFn: ({ id, roleIds }: { id: number; roleIds: number[] }) =>
-      userApi.assignRoles(id, roleIds),
+      assignRoles(id, roleIds),
     onSuccess: () => {
       setAssignRoleVisible(false);
       setCurrentUserId(undefined);
@@ -68,7 +80,7 @@ function UserPage() {
   // 修改用户状态
   const changeStatusMutation = useMutation({
     mutationFn: ({ id, status }: { id: number; status: string }) =>
-      userApi.changeStatus(id, status),
+      changeStatus(id, status),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: [userQueryKey] });
     },
@@ -221,7 +233,7 @@ function UserPage() {
             icon={null}
             size="small"
             key={`del-${record.id}`}
-            delApi={userApi.delete}
+            delApi={deleteUser}
             ids={String(record.id)}
             queryKey={[userQueryKey]}
             confirmTitle={`删除用户 ${record.username}?`}
@@ -269,10 +281,9 @@ function UserPage() {
             type="tertiary"
             size="small"
             onClick={() => {
-              navigate(`/system/user-auth/role/${record.id}`, {
-                state: {
-                  roleIds: record.roles?.map((item) => item.id) || [],
-                },
+              const roleIds = record.roles?.map((item) => item.id) || [];
+              navigate({
+                to: `/system/user/auth-role/${record.id}?roleIds=${roleIds.join(",")}`,
               });
             }}
           >
@@ -304,7 +315,7 @@ function UserPage() {
             }}
           />
           <DelBtn
-            delApi={userApi.delete}
+            delApi={deleteUser}
             ids={selectedRowKeys.map(String)}
             queryKey={[userQueryKey]}
             onSuccess={() => {
@@ -369,5 +380,3 @@ function UserPage() {
     </div>
   );
 }
-
-export default UserPage;

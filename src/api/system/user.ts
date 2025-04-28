@@ -37,80 +37,156 @@ export interface UserForm {
   updatedAt?: string;
 }
 
-/**
- * 用户管理相关API
- */
-export const userApi = {
-  /**
-   * 获取用户列表
-   */
-  getList: (params: UserQuery) => {
-    return request.get<{
-      total: number;
-      list: UserInfo[];
-    }>("/system/user/list", params);
-  },
+export interface ProfileInfo {
+  id: number;
+  deptId: number;
+  username: string;
+  nickname: string;
+  userType: string;
+  email: string;
+  phonenumber: string;
+  sex: string;
+  avatar: string;
+  status: string;
+  delFlag: string;
+  loginIp: string;
+  loginDate: string;
+  createBy: string;
+  createdAt: string;
+  updateBy: string;
+  updatedAt: string;
+  remark: string;
+  dept: {
+    id: number;
+    name: string;
+  };
+  userRoles: Array<{
+    userId: number;
+    roleId: number;
+    createdAt: string;
+    role: {
+      id: number;
+      name: string;
+      key: string;
+      orderNo: number;
+      dataScope: string;
+      menuCheckStrictly: number;
+      deptCheckStrictly: number;
+      status: string;
+      delFlag: string;
+      createBy: string;
+      createdAt: string;
+      updateBy: string;
+      updatedAt: string;
+      remark: string;
+    };
+  }>;
+  roles: Array<{
+    id: number;
+    name: string;
+    key: string;
+  }>;
+}
 
-  /**
-   * 新增用户
-   */
-  add: (data: UserForm) => {
-    return request.post("/system/user", data, {
+export interface UpdateProfileParams {
+  username: string;
+  nickname?: string;
+  phone: string;
+  email: string;
+  gender: string;
+}
+
+export interface UpdatePasswordParams {
+  oldPassword: string;
+  newPassword: string;
+  confirmPassword: string;
+}
+
+// 获取用户列表
+export function listUser(params: UserQuery) {
+  return request.get<{
+    total: number;
+    list: UserInfo[];
+  }>("/system/user/list", params);
+}
+
+// 新增用户
+export function addUser(data: UserForm) {
+  return request.post("/system/user", data, {
+    showMessage: true,
+  });
+}
+
+// 修改用户信息
+export function updateUser(data: UserForm) {
+  return request.put("/system/user", data, {
+    showMessage: true,
+  });
+}
+
+// 删除用户
+export function deleteUser(ids: string) {
+  return request.delete(`/system/user/${ids}`, {
+    showMessage: true,
+  });
+}
+
+// 重置密码
+export function resetPassword(id: number, newPassword: string) {
+  return request.put(
+    `/system/user/resetPwd`,
+    { id, newPassword },
+    { showMessage: true }
+  );
+}
+
+// 修改用户状态
+export function changeStatus(id: number, status: string) {
+  return request.put(`/system/user/changeStatus`, { id, status });
+}
+
+// 分配用户角色
+export function assignRoles(id: number, roleIds: number[]) {
+  return request.post(
+    `/system/user/${id}/roles`,
+    { roleIds },
+    {
       showMessage: true,
-    });
-  },
+    }
+  );
+}
 
-  /**
-   * 修改用户
-   */
-  update: (data: UserForm) => {
-    return request.put(`/system/user`, data, {
-      showMessage: true,
-    });
-  },
+// 获取用户角色
+export function getUserRoles(id: number) {
+  return request.get<number[]>(`/system/user/${id}/roles`);
+}
 
-  /**
-   * 删除用户
-   */
-  delete: (ids: string) => {
-    return request.delete(`/system/user/${ids}`);
-  },
+// 获取用户个人信息
+export function getUserProFile() {
+  return request.get<ProfileInfo>("/system/user/profile");
+}
 
-  /**
-   * 重置密码
-   */
-  resetPassword: (id: number, newPassword: string) => {
-    return request.put(
-      `/system/user/resetPwd`,
-      { id, newPassword },
-      { showMessage: true }
-    );
-  },
+// 修改用户个人信息
+export function updateUserProFile(data: UpdateProfileParams) {
+  return request.put("/system/user/profile", data, {
+    showMessage: true,
+  });
+}
 
-  /**
-   * 修改用户状态
-   */
-  changeStatus: (id: number, status: string) => {
-    return request.put(`/system/user/changeStatus`, { id, status });
-  },
+// 修改用户密码
+export function updateUserPassword(data: UpdatePasswordParams) {
+  return request.put("/system/user/updatePwd", data, {
+    showMessage: true,
+  });
+}
 
-  /**
-   * 分配用户角色
-   */
-  assignRoles: (id: number, roleIds: number[]) => {
-    return request.post(
-      `/system/user/${id}/roles`,
-      { roleIds },
-      {
-        showMessage: true,
-      }
-    );
-  },
-
-  /**
-   * 获取用户角色
-   */
-  getRoles: (id: number) => {
-    return request.get<number[]>(`/system/user/${id}/roles`);
-  },
-};
+export function uploadAvatar(file: File) {
+  const formData = new FormData();
+  formData.append("avatar", file);
+  return request.put<string>("/system/user/avatar", formData, {
+    headers: {
+      "Content-Type": "multipart/form-data",
+    },
+    showMessage: true,
+  });
+}

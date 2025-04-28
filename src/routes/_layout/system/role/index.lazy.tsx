@@ -1,3 +1,5 @@
+import { createLazyFileRoute } from "@tanstack/react-router";
+
 import { useState } from "react";
 import { Card, Button, Table, Switch, Modal } from "@douyinfe/semi-ui";
 import type { ColumnProps } from "@douyinfe/semi-ui/lib/es/table";
@@ -8,7 +10,7 @@ import {
   type RoleForm,
 } from "@/api/system/role";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
-import { RoleModal } from "./components/RoleModal";
+import { RoleModal } from "./-components/RoleModal";
 import { format } from "date-fns";
 import { DelBtn, AddBtn, SearchForm } from "@/components";
 import type { SearchFieldConfig } from "@/types/search-form";
@@ -282,4 +284,6 @@ function RolePage() {
   );
 }
 
-export default RolePage;
+export const Route = createLazyFileRoute("/_layout/system/role/")({
+  component: RolePage,
+});

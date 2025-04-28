@@ -1,11 +1,5 @@
-import {
-  Card,
-  Button,
-  Table,
-  Switch,
-  Modal,
-  Typography,
-} from "@douyinfe/semi-ui";
+import { createLazyFileRoute } from "@tanstack/react-router";
+import { Card, Button, Table, Typography } from "@douyinfe/semi-ui";
 import { useState } from "react";
 import {
   menuApi,
@@ -14,7 +8,7 @@ import {
   type MenuForm,
 } from "@/api/system/menu";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
-import { MenuModal } from "./components/MenuModal";
+import { MenuModal } from "./-components/MenuModal";
 import { DelBtn, AddBtn, SearchForm } from "@/components";
 import type { SearchFieldConfig } from "@/types/search-form";
 import { IconFolder, IconFile, IconKey } from "@douyinfe/semi-icons";
@@ -22,7 +16,6 @@ import type { ColumnProps } from "@douyinfe/semi-ui/lib/es/table";
 
 function MenuPage() {
   const menuQueryKey = ["menuList"];
-  const [selectedRowKeys, setSelectedRowKeys] = useState<number[]>([]);
   const [modalVisible, setModalVisible] = useState(false);
   const [editData, setEditData] = useState<MenuInfo>();
   const [searchParams, setSearchParams] = useState<MenuQuery>({
@@ -138,12 +131,6 @@ function MenuPage() {
   };
 
   const columns: ColumnProps<MenuInfo>[] = [
-    {
-      title: "ID",
-      dataIndex: "id",
-      width: 60,
-      align: "center",
-    },
     {
       width: 250,
       title: "菜单名称",
@@ -279,12 +266,6 @@ function MenuPage() {
           dataSource={menuList || []}
           pagination={false}
           rowKey="id"
-          rowSelection={{
-            selectedRowKeys,
-            onChange: (selectedRowKeys) => {
-              setSelectedRowKeys(selectedRowKeys as number[]);
-            },
-          }}
           expandAllRows
           defaultExpandAllRows
           expandAllGroupRows
@@ -311,4 +292,6 @@ function MenuPage() {
   );
 }
 
-export default MenuPage;
+export const Route = createLazyFileRoute("/_layout/system/menu/")({
+  component: MenuPage,
+});

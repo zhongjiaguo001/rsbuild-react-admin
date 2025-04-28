@@ -1,19 +1,39 @@
+// src/main.tsx
 import ReactDOM from "react-dom/client";
-import { RouterProvider } from "@tanstack/react-router";
+import { RouterProvider, createRouter } from "@tanstack/react-router";
 import { QueryClientProvider } from "@tanstack/react-query";
 import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
 import { TanStackRouterDevtools } from "@tanstack/react-router-devtools";
-import { initializeRouter } from "@/routes";
 import { queryClient } from "@/utils/query/queryClient";
-import ErrorPage from "@/pages/system/error/ErrorPage";
+import { routeTree } from "./routeTree.gen";
 import { ErrorBoundary } from "@/components";
+import { LoadingSpinner } from "@/components";
+import ErrorPage from "@/pages/system/error/ErrorPage";
+import NotFoundPage from "@/pages/system/error/NotFound";
+
 import "@/styles/global.css";
 
-// 创建路由实例
-const router = initializeRouter();
+const router = createRouter({
+  routeTree,
+  context: {
+    queryClient,
+  },
+  defaultPreload: "intent",
+  defaultPreloadStaleTime: 0,
+  scrollRestoration: true,
+  defaultErrorComponent: ErrorPage,
+  defaultPendingComponent: LoadingSpinner,
+  defaultNotFoundComponent: NotFoundPage,
+});
+
+declare module "@tanstack/react-router" {
+  interface Register {
+    router: typeof router;
+  }
+}
 
 ReactDOM.createRoot(document.getElementById("root")!).render(
-  <ErrorBoundary fallback={<ErrorPage />}>
+  <ErrorBoundary>
     <QueryClientProvider client={queryClient}>
       <RouterProvider router={router} />
       <ReactQueryDevtools initialIsOpen={false} />

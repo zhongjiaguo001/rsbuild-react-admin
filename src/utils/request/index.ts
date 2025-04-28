@@ -1,7 +1,7 @@
 import axios, { AxiosInstance, AxiosResponse, AxiosError } from "axios";
 import type { ApiResponse, RequestOptions } from "@/types/request";
-import { Toast } from "@douyinfe/semi-ui";
-import { userStore } from "@/store";
+import { Toast, Modal } from "@douyinfe/semi-ui";
+import { useAuthStore } from "@/store";
 
 // 环境变量中的API URL，如果没有则使用默认值
 const API_URL =
@@ -31,7 +31,7 @@ const createAxiosInstance = (options?: RequestOptions): AxiosInstance => {
   instance.interceptors.request.use(
     (config) => {
       // 获取token并添加到请求头
-      const token = userStore.getState().token;
+      const token = useAuthStore.getState().token;
       if (token && config.headers) {
         config.headers.Authorization = `Bearer ${token}`;
       }
@@ -108,8 +108,19 @@ const handleError = (error: AxiosError) => {
       //   case 401:
       // message = "未授权，请重新登录";
       // 可以在这里处理登出逻辑
-      // logout();
-      window.location.href = "/login";
+      Modal.confirm({
+        centered: true,
+        title: "系统提示",
+        content: "您的登录状态已过期，是否重新登录？",
+        okText: "重新登录",
+        cancelText: "取消",
+        onOk: () => {
+          // 执行登出操作
+          useAuthStore.getState().logout();
+          window.location.href = "/login";
+        },
+      });
+      return;
     }
     // 根据状态码处理错误
     // switch (status) {

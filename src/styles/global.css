@@ -18,3 +18,7 @@ body {
 [theme-mode="dark"] .semi-bg-background-page {
     background-color:var(--semi-color-bg-1)
 }
+
+.semi-dropdown-item {
+    border-radius: var(--semi-border-radius-small);
+}
